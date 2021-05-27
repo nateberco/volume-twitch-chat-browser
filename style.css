@@ -1,50 +1,37 @@
 li {
-  padding: 5px;
+  padding: 8px;
 }
 
-#messageListTwitch {
+#twitchMessage {
   list-style: none;
   padding-left: 0;
+  color: purple;
 }
 
-#messageListTwitch li {
-  position: relative;
-  padding-left: 20px;
-}
-
-#messageListTwitch li:before {
+li#twitchMessage::before {
   content: "";
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   position: absolute;
+  left: 20px;
   background-image: url(./assets/twitch-brands.svg);
   background-size: cover;
   background-position: center;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
-.messageListVolume {
-  list-style-image: url(./assets/volumeLogo.jpeg);
-  /* list-style: none; */
+#volumeMessage {
+  list-style: none;
   padding-left: 0;
+  color: orange;
 }
 
-.messageListVolume li {
-  position: relative;
-  padding-left: 20px;
-}
-
-.messageListVolume li:before {
+li#volumeMessage::before {
   content: "";
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   position: absolute;
+  left: 20px;
   background-image: url(./assets/volumeLogo.jpeg);
   background-size: cover;
   background-position: center;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
 }
