@@ -154,8 +154,10 @@
 //     });
 // });
 
-var username = "eliora"
-axios.get(`https://volume.com/api/chatvideocontext/${username}/`)
+/* *************** */
+
+var usernameVolume = "cido"
+axios.get(`https://volume.com/api/chatvideocontext/${usernameVolume}/`)
     .then(response => {
     console.log("axios test", response.data.wschat_host)
     var websocket_connection_url = response.data.wschat_host;
@@ -192,12 +194,50 @@ axios.get(`https://volume.com/api/chatvideocontext/${username}/`)
     // }
 
     sock.addEventListener('message', function (event) {
-    console.log('Volume WS Message', event.data);
+    var message = JSON.parse(event.data);
+    console.log('full JSON', message);
+    if (message["method"] === "onRoomMsg") {
+        // For some reason, the 'args' value is also a string that needs to be parsed in to a JSON object again.
+        var messageData = JSON.parse(message['args'][1]);
+        // This is the chat message typed by the user.
+        var chatMessage = messageData['m'];
+        //  This is the username of the chat message sent in line above (chatMessage)
+        var usernameData = message['args'][0];
+
+        //  start emote URL cleanup
+        var emoteTop = (chatMessage.substring(chatMessage.indexOf('https:')))
+        var emoteCleaned = emoteTop.substring(0, emoteTop.indexOf('.jpg')+4);
+        console.log("Emote Cleaned: ", emoteCleaned)
+        //  end URL cleanup
+            
+            if (chatMessage.includes("%%%[emoticon")) {
+              chatMessage = emoteCleaned
+              
+            } 
+
+            
+    } else {
+      return chatMessage;
+    }
+
+    username = (usernameData + ": ");
+    console.log(username, chatMessage)
+
+
+
+        
 
     var volumeMessage = document.createElement("li")
+    var volumeEmote = document.createElement("img")
+    volumeEmote.src = emoteCleaned
+
     volumeMessage.id = 'volumeMessage'
-    var volumeMessageText = document.createTextNode(event.data)
+    volumeEmote.id = 'volumeMessage'
+
+    var volumeMessageText = document.createTextNode(username + chatMessage)
+    
     volumeMessage.appendChild(volumeMessageText)
+    document.getElementById('messagesComp').appendChild(volumeEmote);
     document.getElementById('messagesComp').appendChild(volumeMessage);
     });
 
@@ -205,6 +245,15 @@ axios.get(`https://volume.com/api/chatvideocontext/${username}/`)
 
 
 /* ******** NOTES ********** */
+
+/* 
+{"args":
+    ["steph",
+      "{\"c\": \"#ffffff\", \"X-Successful\": true, \"in_fanclub\": false, \"f\": \"default\", \"i\": \"SQX9QYV\", \"gender\": \"m\", \"has_tokens\": true, \"m\": \"%%%[emoticon follow|https://public.volume.com/uploads/avatar/2021/02/09/21/41/5d45e26e4173088be81a720d6971134c74856b67.jpg|94|30|/emoticon_report_abuse/follow/]%%%\", \"tipped_alot_recently\": true, \"user\": \"steph\", \"is_mod\": false, \"tipped_tons_recently\": true, \"tipped_recently\": true}"
+    ],
+    "callback":null,"method":"onRoomMsg"}
+*/ 
+
 /*
  find a browser for non-browser javascript to send http request
  javascript event cycle
