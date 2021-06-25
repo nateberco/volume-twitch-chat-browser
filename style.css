@@ -23,6 +23,13 @@ li#twitchMessage::before {
   list-style: none;
   padding-left: 0;
   color: orange;
+  /* this preserves spaces!! */
+  white-space: pre-wrap;
+}
+
+li#volumeMessage {
+  top: 0%;
+  display: flex;
 }
 
 li#volumeMessage::before {
@@ -33,7 +40,10 @@ li#volumeMessage::before {
   left: 20px;
   background-image: url(./assets/volumeLogo.jpeg);
   background-size: cover;
-  background-position: center;
+}
+
+.username {
+  font-weight: bolder !important;
 }
 
 /* Start New Chat Overlay */

@@ -100,63 +100,9 @@
 
 /* *************************************** VOLUME ************************* */
 
-
-// // https://chat4.volume.com/ws
-// var sock = new WebSocket('https://volume.com/api/chatvideocontext/sisjones/');
-        
-// sock.onopen = function() {
-//     console.log('open');
-//     // sock.send('test');
-//     // sock.send(JSON.stringify(roomInfo))
-// };
-
-// sock.addEventListener('message', function (event) {
-//     console.log('Volume WS Message', event.data);
-
-//     // var volumeMessage = document.createElement('li'); // is a node
-//     // // volumeMessage.classList.add('messageListVolume')
-//     // volumeMessage.innerHTML = event.data;
-//     // document.getElementById.appendChild(volumeMessage);
-
-//     var volumeMessage = document.createElement("li")
-//     volumeMessage.id = 'volumeMessage'
-//     var volumeMessageText = document.createTextNode(event.data)
-//     volumeMessage.appendChild(volumeMessageText)
-//     document.getElementById('messagesComp').appendChild(volumeMessage);
-
-// });
-
-// sock.onclose = function() {
-//     console.log('close');
-// };
-
-/* ***** SCROLL ****** */
-// https://medium.com/swlh/auto-scroll-in-javascript-283bdf76dc01
-
-// var chatScroll = document.getElementById("messagesComp");
-// chatScroll.scrollTop = chatScroll.scrollHeight;
-
-
-    
-/* ******** NEW ATTEMPT ********** */
-
-
-// var username = "sisjones"
-// axios.get(`https://volume.com/api/chatvideocontext/${username}/`, (response) => {
-//     console.log("axios test")
-//     var websocket_connection_url = response.data['wschat_host'];
-//     var sock = new WebSocket(websocket_connection_url)
-//     sock.on('connection', function(conn) {
-//         conn.on('data', function(data) {
-//             console.log(data)
-//             console.log('test')    
-//         })
-//     });
-// });
-
-/* *************** */
-
-var usernameVolume = "cido"
+// USERNAME INPUT
+var usernameVolume = "nota_rubra"
+// Connect to WebSocket
 axios.get(`https://volume.com/api/chatvideocontext/${usernameVolume}/`)
     .then(response => {
     console.log("axios test", response.data.wschat_host)
@@ -189,10 +135,6 @@ axios.get(`https://volume.com/api/chatvideocontext/${usernameVolume}/`)
       console.log(joinRoom)
     }
 
-    // sock.onmessage = function(e) {
-    //   console.log('message:', e.data);
-    // }
-
     sock.addEventListener('message', function (event) {
     var message = JSON.parse(event.data);
     console.log('full JSON', message);
@@ -203,44 +145,42 @@ axios.get(`https://volume.com/api/chatvideocontext/${usernameVolume}/`)
         var chatMessage = messageData['m'];
         //  This is the username of the chat message sent in line above (chatMessage)
         var usernameData = message['args'][0];
-
-        //  start emote URL cleanup
-        var emoteTop = (chatMessage.substring(chatMessage.indexOf('https:')))
-        var emoteCleaned = emoteTop.substring(0, emoteTop.indexOf('.jpg')+4);
-        console.log("Emote Cleaned: ", emoteCleaned)
-        //  end URL cleanup
-            
-            if (chatMessage.includes("%%%[emoticon")) {
-              chatMessage = emoteCleaned
-              
-            } 
-
-            
-    } else {
-      return chatMessage;
-    }
-
-    username = (usernameData + ": ");
-    console.log(username, chatMessage)
-
-
-
+        username = (usernameData + ":   ");
+        username.className = 'username'
         
+        
+        // console.log(username, chatMessage)
+            
+        // CONDITION to check if message contains an EMOTE or not
+        if (chatMessage.includes("%%%[emoticon")) {
+          //  start emote URL cleanup
+          var emoteTop = (chatMessage.substring(chatMessage.indexOf('https:')))
+          var emoteCleaned = emoteTop.substring(0, emoteTop.indexOf('.jpg')+4);
+          console.log("Emote Cleaned: ", emoteCleaned)
+          //  end URL cleanup
 
-    var volumeMessage = document.createElement("li")
-    var volumeEmote = document.createElement("img")
-    volumeEmote.src = emoteCleaned
-
-    volumeMessage.id = 'volumeMessage'
-    volumeEmote.id = 'volumeMessage'
-
-    var volumeMessageText = document.createTextNode(username + chatMessage)
+            // var volumeEmote = document.createElement("img")
+            // volumeEmote.src = emoteCleaned
+            // volumeEmote.id = 'volumeMessage'
+            // document.getElementById('messagesComp').appendChild(volumeEmote);  
+            var newImage = document.createElement('img')
+            newImage.setAttribute('class', 'volume-emoticon')
+            newImage.src = emoteCleaned
+            var volumeEmoteMessage = document.createElement('li')
+            volumeEmoteMessage.id = 'volumeMessage'
+            var usernameText = document.createTextNode(username)
+            volumeEmoteMessage.appendChild(usernameText)
+            volumeEmoteMessage.appendChild(newImage);
+            document.getElementById('messagesComp').appendChild(volumeEmoteMessage)   
+        } else {
+          var volumeMessage = document.createElement("li")
+          volumeMessage.id = 'volumeMessage'
+          var volumeMessageText = document.createTextNode(username + chatMessage)
+          volumeMessage.appendChild(volumeMessageText)
+          document.getElementById('messagesComp').appendChild(volumeMessage);
+        }
     
-    volumeMessage.appendChild(volumeMessageText)
-    document.getElementById('messagesComp').appendChild(volumeEmote);
-    document.getElementById('messagesComp').appendChild(volumeMessage);
-    });
-
+    }});
 });
 
 
@@ -258,3 +198,9 @@ axios.get(`https://volume.com/api/chatvideocontext/${usernameVolume}/`)
  find a browser for non-browser javascript to send http request
  javascript event cycle
 */
+
+/* ***** SCROLL ****** */
+// https://medium.com/swlh/auto-scroll-in-javascript-283bdf76dc01
+
+// var chatScroll = document.getElementById("messagesComp");
+// chatScroll.scrollTop = chatScroll.scrollHeight;
