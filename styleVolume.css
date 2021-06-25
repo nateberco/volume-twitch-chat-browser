@@ -1,15 +1,15 @@
 li {
-  padding: 8px;
+  padding: 10px;
 }
 
-#twitchMessage {
+#twitchMessage.chat-line {
   list-style: none;
   padding-left: 0;
   color: purple;
 }
 
-li#twitchMessage::before {
-  content: "";
+li#twitchMessage.chat-line::before {
+  content: "" !important;
   width: 20px;
   height: 20px;
   position: absolute;
@@ -21,7 +21,6 @@ li#twitchMessage::before {
 
 #volumeMessage {
   list-style: none;
-  padding-left: 0;
   color: orange;
   /* this preserves spaces!! */
   white-space: pre-wrap;
